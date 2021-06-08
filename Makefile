@@ -10,43 +10,46 @@ OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 CROSS   := arm-none-eabi-
 AS      := $(CROSS)as
 CC      := $(CROSS)gcc
-LD      := $(CROSS)ld
+LD 		:= $(CROSS)g++
 OBJCOPY := $(CROSS)objcopy
 
 ARMINC = /usr/arm-none-eabi/include
 ARMLIB = /usr/arm-none-eabi/lib
 GCCLIB = /usr/lib/gcc/arm-none-eabi/$(GCC_VERSION)
 
-CRELEASE = -O2
-CDEBUG = -g -DDEBUG
-LDRELEASE = -s
-LDDEBUG = -g
+# Tools and flags.
+CC = $(CROSS)gcc
+CCPP = $(CROSS)g++
+CFLAGS = -mthumb-interwork -fomit-frame-pointer -mcpu=arm7tdmi -ffast-math -fno-exceptions -Wno-discarded-qualifiers
+# added "-ffixed-r14" and "-mlong-calls" below to work around compiler bugs
+THUMB = -mthumb -O3 -ffixed-r14 -funroll-loops
+ARM = -marm -Os -mlong-calls
+DEFAULT = $(THUMB)
+# DEFAULT was $(THUMB)
 
-MODEL    = -mthumb-interwork -mthumb
-CFLAGS   = -std=c99 -fno-common $(MODEL) -mlong-calls -I $(ARMINC) -I $(INCLUDE_DIR) $(CRELEASE)
-LDFLAGS = -nostartfiles -lc -lgcc -L $(ARMLIB) $(LDRELEASE) \
-	  -L $(ARMLIB)/thumb \
-	  -L $(GCCLIB) \
-	  -T arm-gba.ld
+AS = $(CROSS)as
+ASFLAGS = -mthumb-interwork
 
-crt0.o : $(SRC_DIR)/crt0.s
-	@$(AS) $(MODEL) $^ -o $(BUILD_DIR)/crt0.o
+AAS_DIR = $(SRC_DIR)/apex-audio-system
 
-libc_sbrk.o : $(SRC_DIR)/libc_sbrk.c
-	@$(CC) $(CFLAGS) $(CRELEASE) -c $< -o $(BUILD_DIR)/libc_sbrk.o
+# Library and include paths.
+LIBS = -L$(AAS_DIR)/build/aas/lib -lAAS
+INCLUDES = -I$(AAS_DIR)/build/aas/include
 
 .PHONY : build_dir
 build_dir:
 	@mkdir -p $(BUILD_DIR)
 
+$(BUILD_DIR)/crt/crt0.o: $(SRC_DIR)/crt0.s
+	@mkdir -p $(BUILD_DIR)/crt
+	$(AS) -o $@ $<
+
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY : all
-all: build_dir crt0.o libc_sbrk.o $(OBJECTS)
+all: build_dir $(BUILD_DIR)/crt/crt0.o $(OBJECTS)
 
 .PHONY : clean
 clean:
 	rm -r $(BUILD_DIR)/
-
-

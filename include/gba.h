@@ -4,6 +4,9 @@
 #include "types.h"
 #include "sprite.h"
 #include "background.h"
+#include "sound.h"
+#include "gbalib.h"
+#include "AAS.h"
 // ---------------------------------------------------------------------------
 //                       MODE3 MACROS
 // ---------------------------------------------------------------------------
@@ -124,39 +127,5 @@ extern const unsigned char fontdata_6x8[12288];
 
 
 // lib functions TODO: move
-
-typedef struct {
-    u16 value;
-} Color;
-
-typedef enum {
-    A,
-    B,
-    SELECT,
-    START,
-    RIGHT,
-    LEFT,
-    UP, 
-    DOWN,
-    R,
-    L
-} Button;
-
-void updateScreen();
-void gbaSetup();
-bool isButtonDown(Button button);
-bool wasButtonPressed(Button button);
-bool wasButtonReleased(Button button);
-Sprite createSprite(char *image_name);
-void hideSprite(Sprite sprite);
-void showSprite(Sprite sprite);
-bool isSpriteHidden(Sprite sprite);
-Position getPosition(Sprite sprite);
-void updatePosition(Sprite sprite, Position pos);
-void updateImage(Sprite sprite, char *image_name);
-void drawBackground(Background background, Position pos);
-Background createBackground(char *image_name);
-Color createColor(u16 red, u16 blue, u16 green);
-void drawText(char *text, Position pos, Color color);
 
 #endif

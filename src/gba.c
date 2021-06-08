@@ -27,22 +27,46 @@ int randint(int min, int max) {
     return (qran()*(max-min)>>15)+min;
 }
 
-void gbaSetup() {
+// Registers for interrupt handler
+#define REG_IE (*(volatile u16 *)0x4000200)
+#define REG_IF (*(volatile u16 *)0x4000202) 
+
+void InterruptProcess()
+{
+	u16 intr_bits = REG_IE & REG_IF;
+	
+	// It's best to test for AAS's Timer 1 interrupt first
+	if ( intr_bits & 0x10 ) // Timer 1
+		AAS_Timer1InterruptHandler();
+	
+	// Process other interrupts here by testing appropriate bits of "intr_bits"
+
+	// Clear the interrupt flags
+	REG_IF |= REG_IF;
+}
+
+static void gbaSetup() {
     populateSpriteImages();
     populateBackgrounds();
+    populateSounds();
+
+    AAS_SetConfig( AAS_CONFIG_MIX_24KHZ, AAS_CONFIG_CHANS_8, AAS_CONFIG_SPATIAL_MONO, AAS_CONFIG_DYNAMIC_OFF );
+
     PaletteInfo p_info = getPaletteInfo();
     REG_DISPCNT = MODE3 | BG2_ENABLE | OBJ_ENABLE | p_info.dimension_type;
 
     // Sprite setup
-    DMA[3].src = sprite_data_palette;
-    DMA[3].dst = SPRITEPAL;
-    DMA[3].cnt = p_info.length | DMA_ON;
-    DMA[3].src = sprite_data;
-    DMA[3].dst = &charbase[5];
-    DMA[3].cnt = p_info.size | DMA_ON;
+    AAS_DoDMA3(sprite_data_palette, SPRITEPAL, p_info.length | DMA_ON);
+    AAS_DoDMA3(sprite_data, &charbase[5], p_info.size | DMA_ON);
     for(int i = 0; i < 32; i++) {
         sprite_list[i].attr0 = ATTR0_HIDE;
     }
+
+}
+
+void AgbMain() {
+    gbaSetup();
+    main();
 }
 
 void updateScreen() {
@@ -53,9 +77,7 @@ void updateScreen() {
     u16 test_id = 512;
 
     // // Update sprites
-    DMA[3].src = &sprite_list[0];
-    DMA[3].dst = SPRITEMEM;
-    DMA[3].cnt = 32 * 4 | DMA_ON;
+    AAS_DoDMA3(&sprite_list[0], SPRITEMEM, 32 * 4 | DMA_ON);
 
     prev_buttons = BUTTONS;
 }

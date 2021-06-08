@@ -1,0 +1,3 @@
+[submodule "src/apex-audio-system"]
+	path = src/apex-audio-system
+	url = git@github.com:stuij/apex-audio-system.git

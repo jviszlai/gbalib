@@ -2,6 +2,7 @@
 #define SPRITE_H
 
 #include "types.h"
+#include "gbalib.h"
 // *** Sprites =======================================================
 
 typedef struct { u16 tileimg[8192]; } charblock;
@@ -9,13 +10,6 @@ typedef struct { u16 tilemap[1024]; } screenblock;
 
 extern charblock *charbase;
 extern screenblock *screenbase;
-
-typedef struct {
-    u16 attr0;
-    u16 attr1;
-    u16 attr2;
-    u16 fill;
-} ObjAttr;
 
 typedef struct {
     u16 palette_id;
@@ -32,10 +26,6 @@ typedef struct {
     u32 length;
 } PaletteInfo;
 
-typedef struct {
-    char *image_name;
-    ObjAttr *sprite_obj;
-} Sprite;
 
 //Sprite definitions
 #define SPRITEMEM  ((volatile ObjAttr *)0x7000000)
