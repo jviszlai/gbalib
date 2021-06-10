@@ -1,7 +1,7 @@
 #include "gba.h"
 
 
-extern ObjAttr sprite_list[32];
+extern ObjAttr sprite_list[128];
 // Private helper functions
 
 static void initSprite(ObjAttr *sprite_obj, u16 attr0, u16 attr1, u16 attr2) {
@@ -36,11 +36,11 @@ static ObjAttr *addSprite(ObjAttrImageInfo *info, PaletteInfo p_info) {
 //                       Sprite Library Functions
 // ---------------------------------------------------------------------------
 
-Sprite createSprite(char *image_name) {
+Sprite createSprite(char *image_name, Size size) {
     ObjAttrImageInfo *info = getObjAttrImageInfo(image_name);
     PaletteInfo p_info = getPaletteInfo();
     ObjAttr *sprite_obj = addSprite(info, p_info);
-    return (Sprite) {info->image_name, sprite_obj};
+    return (Sprite) {size, info->image_name, sprite_obj};
 }
 
 void showSprite(Sprite sprite) {

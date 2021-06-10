@@ -7,6 +7,8 @@ INCLUDE_DIR = include
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SOURCES))
 
+TARGET_LIB = $(BUILD_DIR)/libGBA.a
+
 CROSS   := arm-none-eabi-
 AS      := $(CROSS)as
 CC      := $(CROSS)gcc

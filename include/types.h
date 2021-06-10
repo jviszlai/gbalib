@@ -38,4 +38,9 @@ typedef struct {
     u16 fill;
 } ObjAttr;
 
+typedef struct {
+    u8 volume;
+    u8 channel;
+} SoundData;
+
 #endif

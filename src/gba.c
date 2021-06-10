@@ -7,12 +7,12 @@ u32 vBlankCounter = 0;
 charblock *charbase = (charblock*)0x6000000;
 extern const unsigned short sprite_data_palette[];
 extern const unsigned short sprite_data[];
-extern ObjAttr sprite_list[32];
+extern ObjAttr sprite_list[128];
 static u32 prev_buttons = 0;
 
 void waitForVBlank(void) {
     // Want to be drawing to screen during VBlank period to avoid tearing artifcats.
-    while (*SCANLINECOUNTER > 160);
+    while (*SCANLINECOUNTER >= 160);
     while (*SCANLINECOUNTER < 160);
     vBlankCounter++;
 }
@@ -67,19 +67,20 @@ static void gbaSetup() {
 void AgbMain() {
     gbaSetup();
     main();
+    while (1);
 }
 
 void updateScreen() {
     // TODO: potentially add internal buffer and flush drawing here to make it harder to tear
+    prev_buttons = BUTTONS;
     waitForVBlank();
 
     u16 test_size = (1 << 14);
     u16 test_id = 512;
 
     // // Update sprites
-    AAS_DoDMA3(&sprite_list[0], SPRITEMEM, 32 * 4 | DMA_ON);
+    AAS_DoDMA3(&sprite_list[0], SPRITEMEM, 128 * 4 | DMA_ON);
 
-    prev_buttons = BUTTONS;
 }
 
 bool isButtonDown(Button button) {
@@ -94,7 +95,41 @@ bool wasButtonReleased(Button button) {
     return KEY_JUST_PRESSED(1 << button, prev_buttons, BUTTONS);
 }
 
-Color createColor(u16 red, u16 blue, u16 green) {
+Color createColor(u16 red, u16 green, u16 blue) {
     // Need to convert [0-255) -> [0-32). So divide by 8
     return (Color) {COLOR(red >> 3, blue >> 3, green >> 3)};
 }
+
+void drawFilledRectangle(Color color, Position pos, Size size) {
+    volatile u16 color_val = color.value;
+    if (size.width == WIDTH) {
+        AAS_DoDMA3(&color_val, &videoBuffer[OFFSET(pos.y, pos.x, WIDTH)], size.width * size.height | DMA_SOURCE_FIXED | DMA_ON );
+    } else {
+        for (int r = 0; r < size.height; r++) {
+            AAS_DoDMA3(&color_val, &videoBuffer[OFFSET(pos.y + r, pos.x, WIDTH)], size.width | DMA_SOURCE_FIXED | DMA_ON);
+        }
+    }
+}
+
+void drawHollowRectangle(Color color, Position pos, Size size) {
+    for (int i = 0; i < size.width; i++) {
+        videoBuffer[OFFSET(pos.y, pos.x + i, WIDTH)] = color.value;
+        videoBuffer[OFFSET(pos.y + size.height - 1, pos.x + i, WIDTH)] = color.value;
+    }
+    for (int i = 1; i < size.height - 1; i++) {
+        videoBuffer[OFFSET(pos.y + i, pos.x, WIDTH)] = color.value;
+        videoBuffer[OFFSET(pos.y + i, pos.x + size.width - 1, WIDTH)] = color.value;
+    }
+}
+
+bool checkCollisionPosition(Sprite sprite, Position pos) {
+    Position sprite_pos = getPosition(sprite);
+    return sprite_pos.x <= pos.x && sprite_pos.x + sprite.size.width > pos.x && sprite_pos.y <= pos.y && sprite_pos.y + sprite.size.height > pos.y;
+}
+
+bool checkCollisionSprite(Sprite sprite1, Sprite sprite2) {
+    Position pos1 = getPosition(sprite1);
+    Position pos2 = getPosition(sprite2);
+    return pos1.x < pos2.x + sprite2.size.width && pos1.x + sprite1.size.width > pos2.x && pos1.y < pos2.y + sprite2.size.height && pos1.y + sprite1.size.height > pos2.y;
+}
+

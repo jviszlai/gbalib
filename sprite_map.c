@@ -5,7 +5,7 @@
 
 #define NUM_SPRITES /*NUM_SPRITES*/
 
-ObjAttr sprite_list[32]; // max 32 sprites
+ObjAttr sprite_list[128]; // max 128 sprites
 static ObjAttrImageInfo images[NUM_SPRITES];
 static int curr_image = 0;
 
