@@ -17,6 +17,8 @@ ADD_BACKGROUNDS_2 = $(foreach background, $(BACKGROUNDS_LOW), addImageData($(bac
 nin10kit-background: 
 ifneq ($(NUM_BACKGROUNDS),0)
 	@nin10kit --mode=3 $(BUILD_DIR)/background_data $(BACKGROUNDS)
+else
+	@nin10kit --mode=3 $(BUILD_DIR)/background_data $(GBALIB_DIR)/src/dummy_assets/dummy_image.png
 endif
 
 .PHONY : background_map
