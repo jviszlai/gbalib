@@ -3,7 +3,7 @@
 #define INVALID_CHANNEL 255
 #define NUM_CHANNELS 8
 
-static SoundData sound_datas[256]; // Max 256 sounds
+static SoundData sound_datas[128]; // Max 128 sounds
 static bool channel_paused[NUM_CHANNELS];
 
 static u8 findAvailableChannel() {

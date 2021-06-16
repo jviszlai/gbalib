@@ -41,19 +41,22 @@ static void drawCenteredString(int col, int row, int width, int height, char *st
     drawString(x, y, str, color);
 }
 
-static void animateWord(char *word, Color color, int r, int c, int vblankcount) {
+static void animateWord(char *word, Color color, Sound sound, int r, int c, int vblankcount) {
     char *curr = word;
     while (*curr && *curr != SPACE) {
         for (int i = 0; i < vblankcount; i++) {
             waitForVBlank();
         }
         drawChar(c, r, *curr, color.value);
+        if (sound.sound_data) {
+            playSound(sound, false);
+        }
         c += 6;
         curr++;
     }
 }
 
-static void animateText(char *text, Color color, Position pos, Size size, int vblankcount) {
+static void animateText(char *text, Color color, Sound sound, Position pos, Size size, int vblankcount) {
     char *curr = text;
     int curr_c = pos.x;
     int curr_r = pos.y;
@@ -78,7 +81,7 @@ static void animateText(char *text, Color color, Position pos, Size size, int vb
                 curr_r += 8;
             }
         } 
-        animateWord(curr, color, curr_r, curr_c, vblankcount);
+        animateWord(curr, color, sound, curr_r, curr_c, vblankcount);
         if (*word_end) {
             drawChar(curr_c + 6 * (word_len - 1), curr_r, SPACE, color.value);
         } else {
@@ -98,13 +101,23 @@ void drawText(char *text, Color color, Position pos) {
 }
 
 void drawBlockText(char *text, Color color, Position pos, Size size) {
-    animateText(text, color, pos, size, 0);
+    Sound dummySound;
+    dummySound.sound_data = NULL;
+    animateText(text, color, dummySound, pos, size, 0);
 }
 
 void animateTextFast(char *text, Color color, Position pos, Size size) {
-    animateText(text, color, pos, size, 1);
+    Sound dummySound;
+    dummySound.sound_data = NULL;
+    animateText(text, color, dummySound, pos, size, 1);
 }
 
 void animateTextSlow(char *text, Color color, Position pos, Size size) {
-    animateText(text, color, pos, size, 3);
+    Sound dummySound;
+    dummySound.sound_data = NULL;
+    animateText(text, color, dummySound, pos, size, 4);
+}
+
+void animateTextSound(char *text, Color color, Sound sound, Position pos, Size size) {
+    animateText(text, color, sound, pos, size, 4);
 }

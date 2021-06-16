@@ -22,8 +22,8 @@ typedef unsigned char u8;
 // ---------------------------------------------------------------------------
 
 typedef struct {
-    u32 x;
-    u32 y;
+    int x;
+    int y;
 } Position;
 
 typedef struct {

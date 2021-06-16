@@ -1,7 +1,6 @@
 #include "gba.h"
 
 volatile unsigned short *videoBuffer = (volatile unsigned short *) 0x6000000;
-u32 vBlankCounter = 0;
 
 // Sprite definitions
 charblock *charbase = (charblock*)0x6000000;
@@ -14,7 +13,6 @@ void waitForVBlank(void) {
     // Want to be drawing to screen during VBlank period to avoid tearing artifcats.
     while (*SCANLINECOUNTER >= 160);
     while (*SCANLINECOUNTER < 160);
-    vBlankCounter++;
 }
 
 static int __qran_seed= 42;
@@ -58,16 +56,19 @@ static void gbaSetup() {
     // Sprite setup
     AAS_DoDMA3(sprite_data_palette, SPRITEPAL, p_info.length | DMA_ON);
     AAS_DoDMA3(sprite_data, &charbase[5], p_info.size | DMA_ON);
-    for(int i = 0; i < 32; i++) {
+    for(int i = 0; i < 128; i++) {
         sprite_list[i].attr0 = ATTR0_HIDE;
     }
 
 }
 
 void AgbMain() {
+    volatile u8 buff[100]; // Honestly have no clue but AAS seems to corrupt x3007eb0 (literally only that address) during interrupt handling. User stack starts at x3007f00, so buffer to start stack past x3007eb0...TODO: debug root cause when I have time
     gbaSetup();
     main();
-    while (1);
+    while (1) {
+        updateScreen();
+    }
 }
 
 void updateScreen() {
@@ -75,12 +76,28 @@ void updateScreen() {
     prev_buttons = BUTTONS;
     waitForVBlank();
 
-    u16 test_size = (1 << 14);
-    u16 test_id = 512;
-
     // // Update sprites
     AAS_DoDMA3(&sprite_list[0], SPRITEMEM, 128 * 4 | DMA_ON);
 
+}
+
+void wait(float seconds) {
+    int vblanks = (int) (70.0 * seconds);
+    for (int i = 0; i < vblanks; i++) {
+        updateScreen();
+    }
+}
+
+bool waitAndCheckButton(float seconds, Button button) {
+    int vblanks = (int) (70.0 * seconds);
+    bool button_pressed = false;
+    for (int i = 0; i < vblanks; i++) {
+        updateScreen();
+        if (isButtonDown(button)) {
+            button_pressed = true;
+        }
+    }
+    return button_pressed;
 }
 
 bool isButtonDown(Button button) {
@@ -97,7 +114,7 @@ bool wasButtonReleased(Button button) {
 
 Color createColor(u16 red, u16 green, u16 blue) {
     // Need to convert [0-255) -> [0-32). So divide by 8
-    return (Color) {COLOR(red >> 3, blue >> 3, green >> 3)};
+    return (Color) {COLOR(red >> 3, green >> 3, blue >> 3)};
 }
 
 void drawFilledRectangle(Color color, Position pos, Size size) {

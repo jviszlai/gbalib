@@ -40,6 +40,8 @@ typedef enum {
 } Button;
 
 void updateScreen();
+void wait(float seconds);
+bool waitAndCheckButton(float seconds, Button button);
 bool isButtonDown(Button button);
 bool wasButtonPressed(Button button);
 bool wasButtonReleased(Button button);
@@ -61,6 +63,7 @@ void drawText(char *text, Color color, Position pos);
 void drawBlockText(char *text, Color color, Position pos, Size size);
 void animateTextFast(char *text, Color color, Position pos, Size size);
 void animateTextSlow(char *text, Color color, Position pos, Size size);
+void animateTextSound(char *text, Color color, Sound sound, Position pos, Size size);
 Sound createSound(char *sound_name);
 void playSound(Sound sound, bool loop);
 void stopSound(Sound sound);

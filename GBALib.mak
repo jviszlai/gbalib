@@ -14,7 +14,7 @@ GCCLIB = /usr/lib/gcc/arm-none-eabi/$(GCC_VERSION)
 # Tools and flags.
 CC = $(CROSS)gcc
 CCPP = $(CROSS)g++
-CFLAGS = -mthumb-interwork -fomit-frame-pointer -mcpu=arm7tdmi -ffast-math -fno-exceptions
+CFLAGS = -mthumb-interwork -fomit-frame-pointer -mcpu=arm7tdmi -ffast-math -fno-exceptions -g
 # added "-ffixed-r14" and "-mlong-calls" below to work around compiler bugs
 THUMB = -mthumb -O3 -ffixed-r14 -funroll-loops
 ARM = -marm -Os -mlong-calls

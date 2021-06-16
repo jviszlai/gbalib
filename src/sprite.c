@@ -15,15 +15,6 @@ static void drawSprite(char x, char y, ObjAttr *sprite_obj, u16 flipCode) {
     sprite_obj->attr1 = (sprite_obj->attr1 & 0xCE00) | (x & 0x01FF) | flipCode;
 }
 
-static void showMovingSprite(ObjAttr *sprite_obj, char slow) {
-    for (int i = 0; i < slow; i++) {
-        waitForVBlank();
-    }
-    DMA[3].src = sprite_obj;
-    DMA[3].dst = SPRITEMEM;
-    DMA[3].cnt = 32 * 4 | DMA_ON;
-}
-
 static ObjAttr *addSprite(ObjAttrImageInfo *info, PaletteInfo p_info) {
     static int sprite_num = 0;
     ObjAttr *sprite_obj = &sprite_list[sprite_num];
