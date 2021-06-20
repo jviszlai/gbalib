@@ -22,16 +22,6 @@ typedef unsigned char u8;
 // ---------------------------------------------------------------------------
 
 typedef struct {
-    int x;
-    int y;
-} Position;
-
-typedef struct {
-    u32 width;
-    u32 height;
-} Size;
-
-typedef struct {
     u16 attr0;
     u16 attr1;
     u16 attr2;

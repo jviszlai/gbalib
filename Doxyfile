@@ -1,0 +1,10 @@
+OXYFILE_ENCODING       = UTF-8
+PROJECT_NAME           = "GBALib"
+PROJECT_BRIEF          = "Intro programming library for GBA development"
+OUTPUT_DIRECTORY       = docs
+ALLOW_UNICODE_NAMES    = YES
+OUTPUT_LANGUAGE        = English
+JAVADOC_AUTOBRIEF      = YES
+INPUT                  = include/gbalib.h
+INPUT_ENCODING         = UTF-8
+FILE_PATTERNS          = *.h

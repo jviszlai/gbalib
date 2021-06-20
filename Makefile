@@ -2,6 +2,7 @@ GCC_VERSION = $(shell arm-none-eabi-gcc -dumpversion)
 
 SRC_DIR = src
 BUILD_DIR = build
+DOCS_DIR = docs
 INCLUDE_DIR = include
 
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
@@ -38,6 +39,10 @@ AAS_DIR = $(SRC_DIR)/apex-audio-system
 LIBS = -L$(AAS_DIR)/build/aas/lib -lAAS
 INCLUDES = -I$(AAS_DIR)/build/aas/include
 
+.PHONY : doxygen
+doxygen : 
+	@doxygen Doxyfile
+
 .PHONY : build_dir
 build_dir:
 	@mkdir -p $(BUILD_DIR)
@@ -50,8 +55,9 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 .PHONY : all
-all: build_dir $(BUILD_DIR)/crt/crt0.o $(OBJECTS)
+all: doxygen build_dir $(BUILD_DIR)/crt/crt0.o $(OBJECTS)
 
 .PHONY : clean
 clean:
 	rm -r $(BUILD_DIR)/
+	rm -r $(DOCS_DIR)/
