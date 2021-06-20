@@ -46,6 +46,7 @@ doxygen :
 .PHONY : build_dir
 build_dir:
 	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(DOCS_DIR)
 
 $(BUILD_DIR)/crt/crt0.o: $(SRC_DIR)/crt0.s
 	@mkdir -p $(BUILD_DIR)/crt
