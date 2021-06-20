@@ -1,11 +1,12 @@
 SOUND_DIR = $(PROJ_DIR)/sounds
 
 SOUNDS = $(wildcard $(SOUND_DIR)/*.mp3)
-SOUNDS_RAW = $(SOUNDS:$(SOUND_DIR)/%.mp3=$(BUILD_DIR)/AAS_Data/%.raw)
-NUM_SOUNDS = $(words $(SOUNDS))
+SOUNDS_WAV = $(wildcard $(SOUND_DIR)/*.wav)
+SOUNDS_RAW = $(SOUNDS:$(SOUND_DIR)/%.mp3=$(BUILD_DIR)/AAS_Data/%.raw) $(SOUNDS_WAV:$(SOUND_DIR)/%.wav=$(BUILD_DIR)/AAS_Data/%.raw)
+NUM_SOUNDS = $(words $(SOUNDS)) + $(words $(SOUNDS_WAV))
 
 #cursed
-SOUND_NAMES = $(SOUNDS:$(SOUND_DIR)/%.mp3=%)
+SOUND_NAMES = $(SOUNDS:$(SOUND_DIR)/%.mp3=%) $(SOUNDS_WAV:$(SOUND_DIR)/%.wav=%)
 ADD_SOUNDS = $(foreach sound, $(SOUND_NAMES), addSound(AAS_DATA_SFX_START_$(sound), AAS_DATA_SFX_END_$(sound), \"$(sound)\");\n)
 
 
