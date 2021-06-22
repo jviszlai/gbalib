@@ -16,23 +16,41 @@ typedef struct {
     int y;
 } Position;
 
+/**
+ * A size representing a width and height in pixels. Note the GBA screen is 240 pixels wide by 160 pixels tall, so typically the largest size you could have would be width=240, height=160.
+ */
 typedef struct {
     u32 width;
     u32 height;
 } Size;
 
+/**
+ * A sprite which is the primary type to represent a constantly moving image. These are handled differently than backgrounds by the GBA hardware which is why we can efficiently animate them.
+ * 
+ * Use createSprite() to make one.
+ */
 typedef struct {
     Size size;
     char *image_name;
     ObjAttr *sprite_obj;
 } Sprite;
 
+/**
+ * A background can be thought of as a stamp on the GBA screen. Contains an image of any size which can be drawn on the screen using functions like drawBackground(). 
+ * 
+ * Use createBackground() to make one.
+ */
 typedef struct {
     Size size;
     char *image_name;
     const u16 *background_data;
 } Background;
 
+/**
+ * A sound which represents sounds playing through the GBA speakers. Can be manipulated by using functions like playSound() and stopSound().
+ * 
+ * Use createSound() to make one.
+ */
 typedef struct {
     const char *mem_start;
     const char *mem_end;
@@ -40,10 +58,16 @@ typedef struct {
     SoundData *sound_data;
 } Sound;
 
+/**
+ * A color that can be assigned to a pixel on the GBA screen. The GBA needs this packed into a single value, so use createColor() to more easily create your own color.
+ */
 typedef struct {
     u16 value;
 } Color;
 
+/**
+ * All of the buttons on the GBA that we can read the state of. Used as arguments for functions like isButtonDown().
+ */
 typedef enum {
     A,
     B,
@@ -194,21 +218,154 @@ void updateImage(Sprite sprite, char *image_name);
  * @param pos The Position to draw at. This should be the desired Position of the top left corner of \p background.
  */
 void drawBackground(Background background, Position pos);
+
+/**
+ * Creates a Background from the given image.
+ * @warning Currently only .png files are supported for backgrounds
+ * 
+ * @param image_name The name of the image used for the Background, located in the Backgrounds/ folder. This should not include the file extension. So to use Forest.png, pass in "Forest", for example.
+ * 
+ * @returns Your shiny new Background in a cool Background struct.
+ */
 Background createBackground(char *image_name);
+
+/**
+ * Creates a Color for you (this is mostly necessary since the color format the GBA uses is slightly unintuitive).
+ * 
+ * @param red The amount of red in the Color. Range is from [0-255] (inclusive)
+ * @param green The amount of green in the Color. Range is from [0-255] (inclusive)
+ * @param blue The amount of blue in the Color. Range is from [0-255] (inclusive)
+ * 
+ * @returns Your cool mixed Color in a Color struct.
+ */
 Color createColor(u16 red, u16 green, u16 blue);
+
+/**
+ * Draws a filled in rectangle on the GBA screen with the specified Color, Position, and Size.
+ * 
+ * @param color The Color of the rectangle
+ * @param pos The Position of the rectangle. This is where the top left of the rectangle will be
+ * @param size The Size of the rectangle
+ */
 void drawFilledRectangle(Color color, Position pos, Size size);
+
+/**
+ * Draws a hollow rectangle with 1 pixel wide lines on the GBA screen with the specified Color, Position, and Size.
+ * 
+ * @param color The Color of the rectangle.
+ * @param pos The Position of the rectangle. This is where the top left of the rectangle will be
+ * @param size The Size of the rectangle
+ */
 void drawHollowRectangle(Color color, Position pos, Size size);
+
+/**
+ * Draws text on the screen starting at the specified position in the specified color.
+ * 
+ * @warning Text drawn with this function will not wrap onto multiple lines. Use drawBlockText() for that.
+ * 
+ * @param text The text to be drawn on the GBA screen
+ * @param color The color of the text
+ * @param pos The starting position of the text
+ */
 void drawText(char *text, Color color, Position pos);
+
+/**
+ * Draws text on the screen starting at the specified position in the specified color. This text is bounded by a rectangle and can wrap onto multiple lines.
+ * 
+ * @param text The text to be drawn on the GBA screen
+ * @param color The color of the text
+ * @param pos The starting position of the text and the top left corner of the bounding rectangle
+ * @param size The size of the bounding rectangle
+ */
 void drawBlockText(char *text, Color color, Position pos, Size size);
+
+/**
+ * Draws text similar to drawBlockText(), however, animates it so the characters appear sequentially. 
+ * 
+ * @warning During the execution of this function, user input is not checked.
+ * 
+ * @param text The text to be drawn on the GBA screen
+ * @param color The color of the text
+ * @param pos The starting position of the text and the top left corner of the bounding rectangle
+ * @param size The size of the bounding rectangle
+ */
 void animateTextFast(char *text, Color color, Position pos, Size size);
+
+/**
+ * Same behavior as animateTextFast() but with a longer animation, meaning more time between characters.
+ * 
+ * @param text The text to be drawn on the GBA screen
+ * @param color The color of the text
+ * @param pos The starting position of the text and the top left corner of the bounding rectangle
+ * @param size The size of the bounding rectangle
+ */
 void animateTextSlow(char *text, Color color, Position pos, Size size);
+
+/**
+ * Same behavior as animateTextSlow() but after each character the specified Sound is played.
+ * 
+ * @param text The text to be drawn on the GBA screen
+ * @param color The color of the text
+ * @param sound The sound to play after drawing each character
+ * @param pos The starting position of the text and the top left corner of the bounding rectangle
+ * @param size The size of the bounding rectangle
+ */
 void animateTextSound(char *text, Color color, Sound sound, Position pos, Size size);
+
+/**
+ * Creates a Sound from the given sound_name.
+ * @warning currently only .wav and .mp3 files are supported.
+ * 
+ * @param sound_name The name of the sound file used for the Sound, located in the Sounds/ folder. This should not include the file extension. So to use Jazz.mp3, pass in "Jazz", for example.
+ * 
+ * @returns Your shiny new Sound in a cool Sound struct
+ */
 Sound createSound(char *sound_name);
+
+/**
+ * Plays the specified sound, with an option to loop the sound or not.
+ * 
+ * @param sound The Sound to be played
+ * @param loop If true, \p sound will play on loop
+ */
 void playSound(Sound sound, bool loop);
+
+/**
+ * Stops the specified sound if it is playing.
+ * 
+ * @param sound The Sound to stop
+ */
 void stopSound(Sound sound);
+
+/**
+ * Pauses a specified sound so it can be resumed from the same point later.
+ * 
+ * @param sound The Sound to pause
+ */
 void pauseSound(Sound sound);
+
+/**
+ * Resumes a specified sound that was previously paused.
+ * 
+ * @param sound The Sound to resume
+ */
 void resumeSound(Sound sound);
+
+/**
+ * Sets the volume of a Sound. It doens't matter if the Sound is currently playing or not.
+ * 
+ * @param sound The Sound to set the volume of
+ * @param volume The volume to set \p sound to. In the range of [0-100] (inclusive)
+ */
 void setVolume(Sound sound, int volume);
+
+/**
+ * Gets the current volume of a Sound. 
+ * 
+ * @param sound The sound to get the volume of
+ * 
+ * @returns The current volume of \p sound, in the range [0-100]
+ */
 int getVolume(Sound sound);
 
 #endif
