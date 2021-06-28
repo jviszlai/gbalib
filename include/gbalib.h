@@ -87,6 +87,16 @@ typedef enum {
 void updateScreen();
 
 /**
+ * Generate a random integer in the range [min, max]
+ * 
+ * @param min The minimum integer in the range
+ * @param max The maximum integer in the range
+ * 
+ * @returns The randomly selected integer in the range
+ */
+int randomInteger(int min, int max);
+
+/**
  * Waits for the specificed number of seconds (approximately). The screen is not updated and buttons aren't 
  * checked for updates during this time.
  * 

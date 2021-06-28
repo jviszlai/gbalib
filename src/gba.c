@@ -21,10 +21,6 @@ static int qran(void) {
     return (__qran_seed>>16) & 0x7FFF;
 }
 
-int randint(int min, int max) {
-    return (qran()*(max-min)>>15)+min;
-}
-
 // Registers for interrupt handler
 #define REG_IE (*(volatile u16 *)0x4000200)
 #define REG_IF (*(volatile u16 *)0x4000202) 
@@ -79,6 +75,10 @@ void updateScreen() {
     // // Update sprites
     AAS_DoDMA3(&sprite_list[0], SPRITEMEM, 128 * 4 | DMA_ON);
 
+}
+
+int randomInteger(int min, int max) {
+    return (qran()*(max-min)>>15)+min;
 }
 
 void wait(float seconds) {
