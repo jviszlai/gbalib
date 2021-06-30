@@ -12,9 +12,9 @@ ADD_SPRITES = $(foreach sprite, $(SPRITES_UP), addImage($(sprite)_PALETTE_ID, $(
 .PHONY : nin10kit-sprite
 nin10kit-sprite:
 ifneq ($(NUM_SPRITES),0)
-	@nin10kit --mode=sprites --bpp=4 --for_bitmap --transparent=FF00FF $(BUILD_DIR)/sprite_data $(SPRITES)
+	@nin10kit --mode=sprites --bpp=8 --for_bitmap --transparent=FF00FF $(BUILD_DIR)/sprite_data $(SPRITES)
 else 
-	@nin10kit --mode=sprites --bpp=4 --for_bitmap --transparent=FF00FF $(BUILD_DIR)/sprite_data $(GBALIB_DIR)/src/dummy_assets/dummy_image.png
+	@nin10kit --mode=sprites --bpp=8 --for_bitmap --transparent=FF00FF $(BUILD_DIR)/sprite_data $(GBALIB_DIR)/src/dummy_assets/dummy_image.png
 endif
 
 .PHONY : sprite_map
