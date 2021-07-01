@@ -16,7 +16,7 @@ static void drawSprite(char x, char y, ObjAttr *sprite_obj, u16 flipCode) {
 }
 
 static ObjAttr *addSprite(ObjAttrImageInfo *info, SpriteInfo s_info) {
-    static int sprite_num = 16;
+    static int sprite_num = 0;
     ObjAttr *sprite_obj = &sprite_list[sprite_num];
     initSprite(sprite_obj, s_info.dimension_type | info->shape | s_info.type | ATTR0_HIDE, info->size, info->palette_id | info->id);
     sprite_num++;
