@@ -46,12 +46,12 @@ static void gbaSetup() {
 
     AAS_SetConfig( AAS_CONFIG_MIX_24KHZ, AAS_CONFIG_CHANS_8, AAS_CONFIG_SPATIAL_MONO, AAS_CONFIG_DYNAMIC_OFF );
 
-    PaletteInfo p_info = getPaletteInfo();
-    REG_DISPCNT = MODE3 | BG2_ENABLE | OBJ_ENABLE | p_info.dimension_type;
+    SpriteInfo s_info = getSpriteInfo();
+    REG_DISPCNT = MODE3 | BG2_ENABLE | OBJ_ENABLE | s_info.dimension_type;
 
     // Sprite setup
-    AAS_DoDMA3(sprite_data_palette, SPRITEPAL, p_info.length | DMA_ON);
-    AAS_DoDMA3(sprite_data, &charbase[5], p_info.size | DMA_ON);
+    AAS_DoDMA3(sprite_data_palette, SPRITEPAL, s_info.palette_size | DMA_ON);
+    AAS_DoDMA3(sprite_data, &charbase[5], s_info.data_size | DMA_ON);
     for(int i = 0; i < 128; i++) {
         sprite_list[i].attr0 = ATTR0_HIDE;
     }

@@ -22,9 +22,9 @@ typedef struct {
 typedef struct {
     u16 type;
     u16 dimension_type;
-    u32 size;
-    u32 length;
-} PaletteInfo;
+    u32 palette_size;
+    u32 data_size;
+} SpriteInfo;
 
 
 //Sprite definitions
@@ -108,7 +108,7 @@ typedef struct {
 #define ATTR2_PALETTE_BANK(pbn) ((pbn)<<12)
 
 void populateSpriteImages();
-PaletteInfo getPaletteInfo();
+SpriteInfo getSpriteInfo();
 ObjAttrImageInfo *getObjAttrImageInfo(char *image_name);
 
 #endif

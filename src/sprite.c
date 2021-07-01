@@ -15,10 +15,10 @@ static void drawSprite(char x, char y, ObjAttr *sprite_obj, u16 flipCode) {
     sprite_obj->attr1 = (sprite_obj->attr1 & 0xCE00) | (x & 0x01FF) | flipCode;
 }
 
-static ObjAttr *addSprite(ObjAttrImageInfo *info, PaletteInfo p_info) {
-    static int sprite_num = 0;
+static ObjAttr *addSprite(ObjAttrImageInfo *info, SpriteInfo s_info) {
+    static int sprite_num = 16;
     ObjAttr *sprite_obj = &sprite_list[sprite_num];
-    initSprite(sprite_obj, p_info.dimension_type | info->shape | p_info.type | ATTR0_HIDE, info->size, info->palette_id | info->id);
+    initSprite(sprite_obj, s_info.dimension_type | info->shape | s_info.type | ATTR0_HIDE, info->size, info->palette_id | info->id);
     sprite_num++;
     return sprite_obj;
 }
@@ -29,8 +29,8 @@ static ObjAttr *addSprite(ObjAttrImageInfo *info, PaletteInfo p_info) {
 
 Sprite createSprite(char *image_name, Size size) {
     ObjAttrImageInfo *info = getObjAttrImageInfo(image_name);
-    PaletteInfo p_info = getPaletteInfo();
-    ObjAttr *sprite_obj = addSprite(info, p_info);
+    SpriteInfo s_info = getSpriteInfo();
+    ObjAttr *sprite_obj = addSprite(info, s_info);
     return (Sprite) {size, info->image_name, sprite_obj};
 }
 
@@ -59,8 +59,8 @@ Position getPosition(Sprite sprite) {
 
 void updateImage(Sprite sprite, char *image_name) {
     ObjAttrImageInfo *info = getObjAttrImageInfo(image_name);
-    PaletteInfo p_info = getPaletteInfo();
-    sprite.sprite_obj->attr0 = sprite.sprite_obj->attr0 & 0x00FF | p_info.dimension_type | info->shape | p_info.type;
+    SpriteInfo s_info = getSpriteInfo();
+    sprite.sprite_obj->attr0 = sprite.sprite_obj->attr0 & 0x00FF | s_info.dimension_type | info->shape | s_info.type;
     sprite.sprite_obj->attr1 = sprite.sprite_obj->attr1 & 0x01FF | info->size;
     sprite.sprite_obj->attr2 = info->palette_id | info->id;
 }

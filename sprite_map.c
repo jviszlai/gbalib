@@ -23,8 +23,8 @@ void populateSpriteImages() {
     /*POPULATE_SPRITES*/
 }
 
-PaletteInfo getPaletteInfo() {
-    return (PaletteInfo) {SPRITE_DATA_PALETTE_TYPE, SPRITE_DATA_DIMENSION_TYPE, SPRITE_DATA_PALETTE_SIZE, SPRITE_DATA_PALETTE_LENGTH};
+SpriteInfo getSpriteInfo() {
+    return (SpriteInfo) {SPRITE_DATA_PALETTE_TYPE, SPRITE_DATA_DIMENSION_TYPE, SPRITE_DATA_PALETTE_LENGTH, SPRITE_DATA_LENGTH};
 }
 
 ObjAttrImageInfo *getObjAttrImageInfo(char *image_name) {
