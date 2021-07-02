@@ -27,11 +27,31 @@ static ObjAttr *addSprite(ObjAttrImageInfo *info, SpriteInfo s_info) {
 //                       Sprite Library Functions
 // ---------------------------------------------------------------------------
 
+Gif createGif(char *gif_name, Size size) {
+    GifInfo g_info = getGifInfo(gif_name);
+    SpriteInfo s_info = getSpriteInfo();
+    ObjAttrImageInfo *frame0_info = g_info.frame0_obj;
+    ObjAttr *frame0_obj = addSprite(frame0_info, s_info);
+    for (int i = 1; i < g_info.num_frames; i++) {
+        addSprite(frame0_info + i, s_info);
+    }
+    return (Gif) {size, gif_name, frame0_obj, g_info.num_frames, 0};
+}
+
 Sprite createSprite(char *image_name, Size size) {
     ObjAttrImageInfo *info = getObjAttrImageInfo(image_name);
     SpriteInfo s_info = getSpriteInfo();
     ObjAttr *sprite_obj = addSprite(info, s_info);
     return (Sprite) {size, info->image_name, sprite_obj};
+}
+
+void showGif(Gif gif) {
+    
+}
+
+void hideGif(Gif gif) {
+    ObjAttr *curr_frame = gif.frame0_obj + (size_t) curr_frame;
+    curr_frame->attr0 = (curr_frame->attr0 & 0xFCFF) | ATTR0_HIDE;
 }
 
 void showSprite(Sprite sprite) {

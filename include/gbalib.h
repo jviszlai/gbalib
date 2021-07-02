@@ -36,6 +36,18 @@ typedef struct {
 } Sprite;
 
 /**
+ * 
+ * 
+ */
+typedef struct {
+    Size size;
+    char *gif_name;
+    ObjAttr *frame0_obj;
+    u16 num_frames;
+    u16 curr_frame;
+} Gif;
+
+/**
  * A background can be thought of as a stamp on the GBA screen. Contains an image of any size which can be drawn on the screen using functions like drawBackground(). 
  * 
  * Use createBackground() to make one.

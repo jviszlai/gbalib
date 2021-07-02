@@ -20,6 +20,12 @@ typedef struct {
 } ObjAttrImageInfo;
 
 typedef struct {
+    char *gif_name;
+    ObjAttrImageInfo *frame0_obj;
+    u16 num_frames;
+} GifInfo;
+
+typedef struct {
     u16 type;
     u16 dimension_type;
     u32 palette_size;
@@ -109,6 +115,7 @@ typedef struct {
 
 void populateSpriteImages();
 SpriteInfo getSpriteInfo();
+GifInfo getGifInfo(char *gif_name);
 ObjAttrImageInfo *getObjAttrImageInfo(char *image_name);
 
 #endif
