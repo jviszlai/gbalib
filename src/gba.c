@@ -150,3 +150,14 @@ bool checkCollisionSprite(Sprite sprite1, Sprite sprite2) {
     return pos1.x < pos2.x + sprite2.size.width && pos1.x + sprite1.size.width > pos2.x && pos1.y < pos2.y + sprite2.size.height && pos1.y + sprite1.size.height > pos2.y;
 }
 
+bool checkCollisionColor(Sprite sprite, Color color) {
+    Position sprite_pos = getPosition(sprite);
+    for (int i = 0; i < sprite.size.width; i++) {
+        for (int j = 0; j < sprite.size.height; j++) {
+            if (videoBuffer[OFFSET(sprite_pos.y + j, sprite_pos.x + i, WIDTH)] == color.value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}

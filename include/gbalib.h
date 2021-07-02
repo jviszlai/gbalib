@@ -162,6 +162,16 @@ bool checkCollisionPosition(Sprite sprite, Position pos);
 bool checkCollisionSprite(Sprite sprite1, Sprite sprite2);
 
 /**
+ * Checks if \p sprite is overlapping with a pixel of color \p color;
+ * 
+ * @param sprite The sprite to check collision of
+ * @param color The color to check collision of
+ * 
+ * @return A boolean value for if \p sprite is overlapping a pixel of color \p color
+ */
+bool checkCollisionColor(Sprite sprite, Color color);
+
+/**
  * Creates a sprite of a given image and size. By default the sprite is hidden. Use showSprite() to show it.
  * @warning Currently only .png files are supported for sprite images.
  * @warning Only the following image sizes are permitted: 4x4, 8x8, 16x16, 32x32
