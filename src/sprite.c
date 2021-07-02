@@ -18,7 +18,7 @@ static void drawSprite(char x, char y, ObjAttr *sprite_obj, u16 flipCode) {
 static ObjAttr *addSprite(ObjAttrImageInfo *info, SpriteInfo s_info) {
     static int sprite_num = 0;
     ObjAttr *sprite_obj = &sprite_list[sprite_num];
-    initSprite(sprite_obj, s_info.dimension_type | info->shape | s_info.type | ATTR0_HIDE, info->size, info->palette_id | info->id);
+    initSprite(sprite_obj, info->shape | s_info.type | ATTR0_HIDE, info->size, info->palette_id | info->id);
     sprite_num++;
     return sprite_obj;
 }
@@ -60,7 +60,7 @@ Position getPosition(Sprite sprite) {
 void updateImage(Sprite sprite, char *image_name) {
     ObjAttrImageInfo *info = getObjAttrImageInfo(image_name);
     SpriteInfo s_info = getSpriteInfo();
-    sprite.sprite_obj->attr0 = sprite.sprite_obj->attr0 & 0x00FF | s_info.dimension_type | info->shape | s_info.type;
-    sprite.sprite_obj->attr1 = sprite.sprite_obj->attr1 & 0x01FF | info->size;
+    sprite.sprite_obj->attr0 = (sprite.sprite_obj->attr0 & 0x03FF) | info->shape | s_info.type;
+    sprite.sprite_obj->attr1 = (sprite.sprite_obj->attr1 & 0x01FF) | info->size;
     sprite.sprite_obj->attr2 = info->palette_id | info->id;
 }
