@@ -93,6 +93,29 @@ typedef struct
 #define DMA_ON (1 << 31)
 
 // ---------------------------------------------------------------------------
+//                       TIMERS
+// ---------------------------------------------------------------------------
+
+typedef struct {
+    volatile unsigned short data;
+    volatile unsigned short cnt;
+} TIMER_REGISTER;
+
+#define REG_TIMER ((volatile TIMER_REGISTER *) 0x4000100)
+
+#define TM_FREQ_1 (0)
+#define TM_FREQ_64 (1)
+#define TM_FREQ_256 (2)
+#define TM_FREQ_1024 (3)
+#define TM_CASCADE (1 << 2)
+#define TM_IRQ (1 << 6)
+#define TM_ENABLE (1 << 7) 
+
+#define IRQ_TIMER2 (1 << 5)
+
+#define REG_IE (*(volatile unsigned short*) 0x4000200)
+
+// ---------------------------------------------------------------------------
 //                       VBLANK
 // ---------------------------------------------------------------------------
 #define SCANLINECOUNTER (volatile unsigned short *)0x4000006

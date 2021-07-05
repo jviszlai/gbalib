@@ -29,6 +29,21 @@ typedef struct {
 } ObjAttr;
 
 typedef struct {
+    u16 palette_id;
+    u16 shape;
+    u16 size;
+    u16 id; 
+    char *image_name;
+} ObjAttrImageInfo;
+
+typedef struct {
+    ObjAttr *gif_obj;
+    ObjAttrImageInfo *frame0_info;
+    u16 num_frames;
+    u16 curr_frame;
+} GifInfo;
+
+typedef struct {
     u8 volume;
     u8 channel;
 } SoundData;

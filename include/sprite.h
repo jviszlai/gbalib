@@ -11,19 +11,12 @@ typedef struct { u16 tilemap[1024]; } screenblock;
 extern charblock *charbase;
 extern screenblock *screenbase;
 
-typedef struct {
-    u16 palette_id;
-    u16 shape;
-    u16 size;
-    u16 id; 
-    char *image_name;
-} ObjAttrImageInfo;
 
 typedef struct {
     char *gif_name;
     ObjAttrImageInfo *frame0_obj;
     u16 num_frames;
-} GifInfo;
+} GifFileInfo;
 
 typedef struct {
     u16 type;
@@ -114,8 +107,9 @@ typedef struct {
 #define ATTR2_PALETTE_BANK(pbn) ((pbn)<<12)
 
 void populateSpriteImages();
+void populateGifs();
 SpriteInfo getSpriteInfo();
-GifInfo getGifInfo(char *gif_name);
+GifFileInfo *getGifFileInfo(char *gif_name);
 ObjAttrImageInfo *getObjAttrImageInfo(char *image_name);
 
 #endif

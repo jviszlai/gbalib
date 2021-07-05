@@ -36,15 +36,14 @@ typedef struct {
 } Sprite;
 
 /**
+ * A sprite but the image is a GIF
  * 
- * 
+ * Use createGif() to make one.
  */
 typedef struct {
     Size size;
     char *gif_name;
-    ObjAttr *frame0_obj;
-    u16 num_frames;
-    u16 curr_frame;
+    GifInfo *gif_info;
 } Gif;
 
 /**
@@ -182,6 +181,46 @@ bool checkCollisionSprite(Sprite sprite1, Sprite sprite2);
  * @return A boolean value for if \p sprite is overlapping a pixel of color \p color
  */
 bool checkCollisionColor(Sprite sprite, Color color);
+
+/**
+ * Just like createSprite except the sprite image is a gif.
+ * 
+ * @param gif_name The name of the gif, without the .gif extension. Should be in the sprites/ folder
+ * @param size The logical size of the sprites as described in createSprite()
+ * 
+ * @return Your shiny new gif sprite in a Gif struct
+ */
+Gif createGif(char *gif_name, Size size);
+
+/**
+ * Just like showSprite() but for a Gif-backed sprite
+ * 
+ * @param gif The gif sprite to show
+ */
+void showGif(Gif gif);
+
+/**
+ * Just like hideSprite() but for a Gif-backed sprite
+ * 
+ * @param gif The gif sprite to show
+ */
+void hideGif(Gif gif);
+
+/**
+ * Just like updatePosition() but for a Gif-backed sprite
+ * 
+ * @param gif The gif to update the position of
+ * @param pos The position to update to
+ */
+void updateGifPosition(Gif gif, Position pos);
+
+/**
+ * Just like getPosition() but for a Gif-backed sprite 
+ * 
+ * @param gif The gif sprite to get the position of
+ * @return The position /p gif is at
+ */
+Position getGifPosition(Gif gif);
 
 /**
  * Creates a sprite of a given image and size. By default the sprite is hidden. Use showSprite() to show it.

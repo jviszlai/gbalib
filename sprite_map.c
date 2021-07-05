@@ -8,7 +8,7 @@
 
 ObjAttr sprite_list[128]; // max 128 sprites
 static ObjAttrImageInfo images[NUM_SPRITES];
-static GifInfo gifs[NUM_GIFS];
+static GifFileInfo gifs[NUM_GIFS];
 static ObjAttrImageInfo gif_frames[/*TOTAL_FRAMES*/];
 static int curr_frame = 0;
 
@@ -54,7 +54,7 @@ SpriteInfo getSpriteInfo() {
     return (SpriteInfo) {SPRITE_DATA_PALETTE_TYPE, SPRITE_DATA_DIMENSION_TYPE, SPRITE_DATA_PALETTE_LENGTH, SPRITE_DATA_LENGTH};
 }
 
-GifInfo getGifInfo(char *gif_name) {
+GifFileInfo *getGifFileInfo(char *gif_name) {
     int len = strlen(gif_name);
     char upper_gif_name[len + 1];
     for (int i = 0; i < len; i++) {

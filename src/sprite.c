@@ -2,6 +2,8 @@
 
 
 extern ObjAttr sprite_list[128];
+GifInfo gif_list[64]; // Max 64 gifs
+int num_gifs = 0;
 // Private helper functions
 
 static void initSprite(ObjAttr *sprite_obj, u16 attr0, u16 attr1, u16 attr2) {
@@ -28,14 +30,14 @@ static ObjAttr *addSprite(ObjAttrImageInfo *info, SpriteInfo s_info) {
 // ---------------------------------------------------------------------------
 
 Gif createGif(char *gif_name, Size size) {
-    GifInfo g_info = getGifInfo(gif_name);
+    GifFileInfo *g_info = getGifFileInfo(gif_name);
     SpriteInfo s_info = getSpriteInfo();
-    ObjAttrImageInfo *frame0_info = g_info.frame0_obj;
-    ObjAttr *frame0_obj = addSprite(frame0_info, s_info);
-    for (int i = 1; i < g_info.num_frames; i++) {
-        addSprite(frame0_info + i, s_info);
-    }
-    return (Gif) {size, gif_name, frame0_obj, g_info.num_frames, 0};
+    ObjAttrImageInfo *frame0_info = g_info->frame0_obj;
+    ObjAttr *gif_obj = addSprite(frame0_info, s_info);
+    gif_list[num_gifs] = (GifInfo) {gif_obj, frame0_info, g_info->num_frames, 0};
+    Gif gif = {size, gif_name, &gif_list[num_gifs]};
+    num_gifs++;
+    return gif;
 }
 
 Sprite createSprite(char *image_name, Size size) {
@@ -46,12 +48,22 @@ Sprite createSprite(char *image_name, Size size) {
 }
 
 void showGif(Gif gif) {
-    
+    gif.gif_info->gif_obj->attr0 &= 0xFCFF;
 }
 
 void hideGif(Gif gif) {
-    ObjAttr *curr_frame = gif.frame0_obj + (size_t) curr_frame;
-    curr_frame->attr0 = (curr_frame->attr0 & 0xFCFF) | ATTR0_HIDE;
+    gif.gif_info->gif_obj->attr0 = (gif.gif_info->gif_obj->attr0 & 0xFCFF) | ATTR0_HIDE;
+}
+
+void updateGifPosition(Gif gif, Position pos) {
+    gif.gif_info->gif_obj->attr0 = (gif.gif_info->gif_obj->attr0 & 0xFC00) | (pos.y & 0x00FF);
+    gif.gif_info->gif_obj->attr1 = (gif.gif_info->gif_obj->attr1 & 0xCE00) | (pos.x & 0x01FF);
+}
+
+Position getGifPosition(Gif gif) {
+    u32 x = gif.gif_info->gif_obj->attr1 & 0x01FF;
+    u32 y = gif.gif_info->gif_obj->attr0 & 0x00FF;
+    return (Position) {x, y};
 }
 
 void showSprite(Sprite sprite) {

@@ -7,6 +7,8 @@ charblock *charbase = (charblock*)0x6000000;
 extern const unsigned short sprite_data_palette[];
 extern const unsigned short sprite_data[];
 extern ObjAttr sprite_list[128];
+extern GifInfo gif_list[64];
+extern int num_gifs;
 static u32 prev_buttons = 0;
 
 void waitForVBlank(void) {
@@ -33,7 +35,27 @@ void InterruptProcess()
 	if ( intr_bits & 0x10 ) // Timer 1
 		AAS_Timer1InterruptHandler();
 	
-	// Process other interrupts here by testing appropriate bits of "intr_bits"
+    // Process other interrupts here by testing appropriate bits of "intr_bits"
+
+    // TODO: update gif based on Timer interrupt
+    if (intr_bits & IRQ_TIMER2) {
+    
+        // Update gifs
+        for (int i = 0; i < num_gifs; i++) {
+            GifInfo *g_info = &gif_list[i];
+            ObjAttrImageInfo *info;
+            if (g_info->curr_frame == g_info->num_frames - 1) {
+                g_info->curr_frame = 0;
+            } else {
+                g_info->curr_frame++;
+            }
+            info = g_info->frame0_info + g_info->curr_frame;
+            SpriteInfo s_info = getSpriteInfo();
+            g_info->gif_obj->attr0 = (g_info->gif_obj->attr0 & 0x03FF) | info->shape | s_info.type;
+            g_info->gif_obj->attr1 = (g_info->gif_obj->attr1 & 0x01FF) | info->size;
+            g_info->gif_obj->attr2 = info->palette_id | info->id;
+        }
+    }
 
 	// Clear the interrupt flags
 	REG_IF |= REG_IF;
@@ -43,11 +65,18 @@ static void gbaSetup() {
     populateSpriteImages();
     populateBackgrounds();
     populateSounds();
+    populateGifs();
 
     AAS_SetConfig( AAS_CONFIG_MIX_24KHZ, AAS_CONFIG_CHANS_8, AAS_CONFIG_SPATIAL_MONO, AAS_CONFIG_DYNAMIC_OFF );
 
     SpriteInfo s_info = getSpriteInfo();
     REG_DISPCNT = MODE3 | BG2_ENABLE | OBJ_ENABLE | s_info.dimension_type;
+
+    // Timer setup (for gif sprites)
+    REG_TIMER[2].data = 0xF300;
+    REG_TIMER[2].cnt = TM_IRQ | TM_ENABLE | TM_FREQ_1024;
+
+    REG_IE |= IRQ_TIMER2;
 
     // Sprite setup
     AAS_DoDMA3(sprite_data_palette, SPRITEPAL, s_info.palette_size | DMA_ON);
@@ -72,7 +101,7 @@ void updateScreen() {
     prev_buttons = BUTTONS;
     waitForVBlank();
 
-    // // Update sprites
+    // Update sprites
     AAS_DoDMA3(&sprite_list[0], SPRITEMEM, 128 * 4 | DMA_ON);
 
 }
