@@ -168,6 +168,24 @@ void drawHollowRectangle(Color color, Position pos, Size size) {
     }
 }
 
+bool checkCollisionPositionGif(Gif gif, Position pos) {
+    Position gif_pos = getGifPosition(gif);
+    return gif_pos.x <= pos.x && gif_pos.x + gif.size.width > pos.x && gif_pos.y <= pos.y && gif_pos.y + gif.size.height > pos.y;
+}
+
+
+bool checkCollisionColorGif(Gif gif, Color color) {
+    Position gif_pos = getGifPosition(gif);
+    for (int i = 0; i < gif.size.width; i++) {
+        for (int j = 0; j < gif.size.height; j++) {
+            if (videoBuffer[OFFSET(gif_pos.y + j, gif_pos.x + i, WIDTH)] == color.value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool checkCollisionPosition(Sprite sprite, Position pos) {
     Position sprite_pos = getPosition(sprite);
     return sprite_pos.x <= pos.x && sprite_pos.x + sprite.size.width > pos.x && sprite_pos.y <= pos.y && sprite_pos.y + sprite.size.height > pos.y;

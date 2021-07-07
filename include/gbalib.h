@@ -153,6 +153,26 @@ bool wasButtonPressed(Button button);
 bool wasButtonReleased(Button button);
 
 /**
+ * Checks if \p gif is overlapping at a specified Position.
+ * 
+ * @param gif The Gif sprite to check
+ * @param pos The Position to check if gif is overlapping at
+ * 
+ * @return A boolean value for if \p gif is overlapping at \p pos
+ */
+bool checkCollisionPositionGif(Gif gif, Position pos);
+
+/**
+ * Checks if \p gif is overlapping with a pixel of color \p color;
+ * 
+ * @param gif The Gif sprite to check collision of
+ * @param color The color to check collision of
+ * 
+ * @return A boolean value for if \p gif is overlapping a pixel of color \p color
+ */
+bool checkCollisionColorGif(Gif gif, Color color);
+
+/**
  * Checks if \p sprite is overlapping at a specified Position.
  * 
  * @param sprite The sprite to check
