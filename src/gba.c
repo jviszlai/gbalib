@@ -186,6 +186,16 @@ bool checkCollisionColorGif(Gif gif, Color color) {
     return false;
 }
 
+bool checkCollisionRectangleGif(Gif gif, Position rectPos, Size rectSize) {
+    Position pos1 = getGifPosition(gif);
+    return pos1.x < rectPos.x + rectSize.width && pos1.x + gif.size.width > rectPos.x && pos1.y < rectPos.y + rectSize.height && pos1.y + gif.size.height > rectPos.y;
+}
+
+bool checkCollisionRectangle(Sprite sprite, Position rectPos, Size rectSize) {
+    Position pos1 = getPosition(sprite);
+    return pos1.x < rectPos.x + rectSize.width && pos1.x + sprite.size.width > rectPos.x && pos1.y < rectPos.y + rectSize.height && pos1.y + sprite.size.height > rectPos.y;
+}
+
 bool checkCollisionPosition(Sprite sprite, Position pos) {
     Position sprite_pos = getPosition(sprite);
     return sprite_pos.x <= pos.x && sprite_pos.x + sprite.size.width > pos.x && sprite_pos.y <= pos.y && sprite_pos.y + sprite.size.height > pos.y;

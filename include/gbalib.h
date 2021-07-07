@@ -183,6 +183,28 @@ bool checkCollisionColorGif(Gif gif, Color color);
 bool checkCollisionPosition(Sprite sprite, Position pos);
 
 /**
+ * Checks if \p sprite is colliding with a rectangel defined by \p rectPos and \p rectSize.
+ * 
+ * @param sprite The Sprite to check
+ * @param rectPos The rectangle Position
+ * @param rectSize The rectangle Size
+ * 
+ * @return A boolean value for if \p sprite is overlapping with the rectangle
+ */
+bool checkCollisionRectangle(Sprite sprite, Position rectPos, Size rectSize);
+
+/**
+ * Checks if \p gif is colliding with a rectangel defined by \p rectPos and \p rectSize.
+ * 
+ * @param gif The Gif sprite to check
+ * @param rectPos The rectangle Position
+ * @param rectSize The rectangle Size
+ * 
+ * @return A boolean value for if \p gif is overlapping with the rectangle
+ */
+bool checkCollisionRectangleGif(Gif gif, Position rectPos, Size rectSize);
+
+/**
  * Checks if \p sprite1 is overlapping with \p sprite2.
  * 
  * @param sprite1 The first sprite
