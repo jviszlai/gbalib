@@ -56,8 +56,8 @@ void hideGif(Gif gif) {
 }
 
 void updateGifPosition(Gif gif, Position pos) {
-    gif.gif_info->gif_obj->attr0 = (gif.gif_info->gif_obj->attr0 & 0xFC00) | (pos.y & 0x00FF);
-    gif.gif_info->gif_obj->attr1 = (gif.gif_info->gif_obj->attr1 & 0xCE00) | (pos.x & 0x01FF);
+    gif.gif_info->gif_obj->attr0 = (gif.gif_info->gif_obj->attr0 & 0xFF00) | (pos.y & 0x00FF);
+    gif.gif_info->gif_obj->attr1 = (gif.gif_info->gif_obj->attr1 & 0xFE00) | (pos.x & 0x01FF);
 }
 
 Position getGifPosition(Gif gif) {
@@ -79,8 +79,8 @@ bool isSpriteHidden(Sprite sprite) {
 }
 
 void updatePosition(Sprite sprite, Position pos) {
-    sprite.sprite_obj->attr0 = (sprite.sprite_obj->attr0 & 0xFC00) | (pos.y & 0x00FF);
-    sprite.sprite_obj->attr1 = (sprite.sprite_obj->attr1 & 0xCE00) | (pos.x & 0x01FF);
+    sprite.sprite_obj->attr0 = (sprite.sprite_obj->attr0 & 0xFF00) | (pos.y & 0x00FF);
+    sprite.sprite_obj->attr1 = (sprite.sprite_obj->attr1 & 0xFE00) | (pos.x & 0x01FF);
 }
 
 Position getPosition(Sprite sprite) {
