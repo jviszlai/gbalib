@@ -41,11 +41,17 @@ static void drawCenteredString(int col, int row, int width, int height, char *st
     drawString(x, y, str, color);
 }
 
-static void animateWord(char *word, Color color, Sound sound, int r, int c, int vblankcount) {
+static bool animateWord(char *word, Color color, Sound sound, int r, int c, int vblankcount, Button button) {
     char *curr = word;
+    bool buttonPressed = false;
     while (*curr && *curr != SPACE) {
         for (int i = 0; i < vblankcount; i++) {
-            waitForVBlank();
+            if (isButtonDown(button)) {
+                vblankcount = 0;
+                buttonPressed = true;
+            } else {
+                waitForVBlank();
+            }
         }
         drawChar(c, r, *curr, color.value);
         if (sound.sound_data) {
@@ -54,12 +60,14 @@ static void animateWord(char *word, Color color, Sound sound, int r, int c, int 
         c += 6;
         curr++;
     }
+    return buttonPressed;
 }
 
-static void animateText(char *text, Color color, Sound sound, Position pos, Size size, int vblankcount) {
+static bool animateText(char *text, Color color, Sound sound, Position pos, Size size, int vblankcount, Button button, bool checkButton) {
     char *curr = text;
     int curr_c = pos.x;
     int curr_r = pos.y;
+    bool button_pressed = false;
     while (*curr) {
         int word_len = 0;
         char *word_end = curr;
@@ -71,25 +79,29 @@ static void animateText(char *text, Color color, Sound sound, Position pos, Size
             word_len++;
         }
         if (6 * word_len > size.width) {
-            return;
+            return button_pressed;
         }
         if (curr_c + 6 * word_len > pos.x + size.width || curr_c + 6 * word_len > WIDTH) {
             if (curr_r + 16 > pos.y + size.height || curr_r + 16 > HEIGHT) {
-                return;
+                return button_pressed;
             } else {
                 curr_c = pos.x;
                 curr_r += 8;
             }
         } 
-        animateWord(curr, color, sound, curr_r, curr_c, vblankcount);
+        if (animateWord(curr, color, sound, curr_r, curr_c, vblankcount, button) && checkButton) {
+            vblankcount = 0;
+            button_pressed = true;
+        }
         if (*word_end) {
             drawChar(curr_c + 6 * (word_len - 1), curr_r, SPACE, color.value);
         } else {
-            return;
+            return button_pressed;
         }
         curr_c += 6 * word_len;
         curr = word_end + 1;
     }
+    return button_pressed;
 }
 
 // ---------------------------------------------------------------------------
@@ -103,21 +115,27 @@ void drawText(char *text, Color color, Position pos) {
 void drawBlockText(char *text, Color color, Position pos, Size size) {
     Sound dummySound;
     dummySound.sound_data = NULL;
-    animateText(text, color, dummySound, pos, size, 0);
+    animateText(text, color, dummySound, pos, size, 0, A, false);
 }
 
 void animateTextFast(char *text, Color color, Position pos, Size size) {
     Sound dummySound;
     dummySound.sound_data = NULL;
-    animateText(text, color, dummySound, pos, size, 1);
+    animateText(text, color, dummySound, pos, size, 1, A, false);
+}
+
+bool animateTextFastButton(char *text, Color color, Position pos, Size size, Button button) {
+    Sound dummySound;
+    dummySound.sound_data = NULL;
+    return animateText(text, color, dummySound, pos, size, 1, button, true);
 }
 
 void animateTextSlow(char *text, Color color, Position pos, Size size) {
     Sound dummySound;
     dummySound.sound_data = NULL;
-    animateText(text, color, dummySound, pos, size, 4);
+    animateText(text, color, dummySound, pos, size, 4, A, false);
 }
 
 void animateTextSound(char *text, Color color, Sound sound, Position pos, Size size) {
-    animateText(text, color, sound, pos, size, 4);
+    animateText(text, color, sound, pos, size, 4, A, false);
 }

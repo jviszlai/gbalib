@@ -405,6 +405,21 @@ void drawBlockText(char *text, Color color, Position pos, Size size);
 void animateTextFast(char *text, Color color, Position pos, Size size);
 
 /**
+ * Draws text similar to animateTextFast(), however, checks if \p button is pressed during animation, and fast-forwards if so. 
+ * 
+ * @warning During the execution of this function, only \b button is checked
+ * 
+ * @param text The text to be drawn on the GBA screen
+ * @param color The color of the text
+ * @param pos The starting position of the text and the top left corner of the bounding rectangle
+ * @param size The size of the bounding rectangle
+ * @param button The button to check
+ * 
+ * @returns A boolean value for if \p button was pressed during the animation
+ */
+bool animateTextFastButton(char *text, Color color, Position pos, Size size, Button button);
+
+/**
  * Same behavior as animateTextFast() but with a longer animation, meaning more time between characters.
  * 
  * @param text The text to be drawn on the GBA screen
