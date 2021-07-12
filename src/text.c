@@ -41,12 +41,12 @@ static void drawCenteredString(int col, int row, int width, int height, char *st
     drawString(x, y, str, color);
 }
 
-static bool animateWord(char *word, Color color, Sound sound, int r, int c, int vblankcount, Button button) {
+static bool animateWord(char *word, Color color, Sound sound, int r, int c, int vblankcount, Button button, bool checkButton) {
     char *curr = word;
     bool buttonPressed = false;
     while (*curr && *curr != SPACE) {
         for (int i = 0; i < vblankcount; i++) {
-            if (isButtonDown(button)) {
+            if (checkButton && isButtonDown(button)) {
                 vblankcount = 0;
                 buttonPressed = true;
             } else {
@@ -89,7 +89,7 @@ static bool animateText(char *text, Color color, Sound sound, Position pos, Size
                 curr_r += 8;
             }
         } 
-        if (animateWord(curr, color, sound, curr_r, curr_c, vblankcount, button) && checkButton) {
+        if (animateWord(curr, color, sound, curr_r, curr_c, vblankcount, button, checkButton)) {
             vblankcount = 0;
             button_pressed = true;
         }
