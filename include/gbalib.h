@@ -173,6 +173,15 @@ bool checkCollisionPositionGif(Gif gif, Position pos);
 bool checkCollisionColorGif(Gif gif, Color color);
 
 /**
+ * Checks if \p gif1 is colliding with \p gif2.
+ * 
+ * @param gif1 The first Gif
+ * @param gif2 The second Gif
+ * 
+ * @return A boolean for if \p gif1 is colliding with \p gif2
+ */
+bool checkCollisionGif(Gif gif1, Gif gif2);
+/**
  * Checks if \p sprite is overlapping at a specified Position.
  * 
  * @param sprite The sprite to check

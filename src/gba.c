@@ -191,6 +191,12 @@ bool checkCollisionRectangleGif(Gif gif, Position rectPos, Size rectSize) {
     return pos1.x < rectPos.x + rectSize.width && pos1.x + gif.size.width > rectPos.x && pos1.y < rectPos.y + rectSize.height && pos1.y + gif.size.height > rectPos.y;
 }
 
+bool checkCollisionGif(Gif gif1, Gif gif2) {
+    Position pos1 = getGifPosition(gif1);
+    Position pos2 = getGifPosition(gif2);
+    return pos1.x < pos2.x + gif2.size.width && pos1.x + gif1.size.width > pos2.x && pos1.y < pos2.y + gif2.size.height && pos1.y + gif1.size.height > pos2.y;
+}
+
 bool checkCollisionRectangle(Sprite sprite, Position rectPos, Size rectSize) {
     Position pos1 = getPosition(sprite);
     return pos1.x < rectPos.x + rectSize.width && pos1.x + sprite.size.width > rectPos.x && pos1.y < rectPos.y + rectSize.height && pos1.y + sprite.size.height > rectPos.y;
