@@ -112,6 +112,23 @@ void drawText(char *text, Color color, Position pos) {
     drawString(pos.x, pos.y, text, color.value);
 }
 
+void drawIntegerText(int value, Color color, Position pos) {
+    int length = 1;
+    int val_length = value;
+    while (val_length) {
+        val_length /= 10;
+        length++;
+    }
+    char str[length + 1];
+    for (int i = 0; i < length; i++) {
+        int new_val = value / 10;
+        char c_int = value - (new_val) * 10;
+        str[length - 2 - i] = c_int + 48;
+    }
+    str[length - 1] = 0;
+    drawString(pos.x, pos.y, str, color.value);
+}
+
 void drawBlockText(char *text, Color color, Position pos, Size size) {
     Sound dummySound;
     dummySound.sound_data = NULL;

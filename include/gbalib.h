@@ -392,6 +392,15 @@ void drawHollowRectangle(Color color, Position pos, Size size);
 void drawText(char *text, Color color, Position pos);
 
 /**
+ * Draws an integer value onto the screen as text.
+ * 
+ * @param value The integer to draw.
+ * @param color The color of the text.
+ * @param pos The position of the text
+ */
+void drawIntegerText(int value, Color color, Position pos);
+
+/**
  * Draws text on the screen starting at the specified position in the specified color. This text is bounded by a rectangle and can wrap onto multiple lines.
  * 
  * @param text The text to be drawn on the GBA screen
